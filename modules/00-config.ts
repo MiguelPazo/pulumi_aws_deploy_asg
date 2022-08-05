@@ -8,10 +8,12 @@ import * as aws from "@pulumi/aws";
 const configPulumi = new pulumi.Config();
 export const stack = pulumi.getStack();
 export const project = configPulumi.get("project");
-export const generalPrefix = `${project}-${stack}`;
+export const appName = configPulumi.get("appName");
+export const generalPrefix = `${project}-${appName}-${stack}`;
 
 export const generalTags = {
     project: project,
+    appName: appName,
     env: stack,
     iac: 'pulumi',
     iac_version: '3.35.3'
