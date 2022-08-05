@@ -15,7 +15,6 @@ const main = async (vpc, securityGroups, alb, amiId) => {
     const launchTemplate = new aws.ec2.LaunchTemplate(`${config.project}-launch-template`, {
         name: `${config.generalPrefix}-launch-template-`,
         imageId: amiId,
-        // keyName: ec2Key.keyName,
         iamInstanceProfile: {
             name: config.ec2InstanceProfileName
         },

@@ -4,70 +4,22 @@
 import * as aws from "@pulumi/aws";
 import * as config from "./00-config";
 import * as awsx from "@pulumi/awsx";
-import * as pulumi from "@pulumi/pulumi";
 
 
 const main = async (vpc, securityGroupAlb) => {
-    let logsBucket;
     let enableDeletionProtection = false;
     let accessLogs = {
         bucket: '',
-        enabled: false
+        enabled: false,
+        prefix: '',
     };
 
     if (['production'].indexOf(config.stack) !== -1) {
         enableDeletionProtection = true;
-
-        logsBucket = new aws.s3.Bucket(`${config.project}-alb-logs`, {
-            bucket: `${config.generalPrefix}-alb-logs`,
-            acl: "private",
-            tags: {
-                ...config.generalTags,
-                Name: `${config.generalPrefix}-alb-logs`
-            }
-        });
-
-        new aws.s3.BucketPolicy(`${config.project}-alb-logs-bucket-policy`, {
-            bucket: logsBucket.id,
-            policy: pulumi.all([logsBucket.arn])
-                .apply(([bucketArn]) => {
-                    const policy = JSON.stringify({
-                        Version: "2012-10-17",
-                        Statement: [
-                            {
-                                "Effect": "Allow",
-                                "Principal": {
-                                    "AWS": `arn:aws:iam::${config.albAccountId}:root`
-                                },
-                                "Action": "s3:PutObject",
-                                "Resource": `${bucketArn}/*`
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Principal": {
-                                    "Service": "delivery.logs.amazonaws.com"
-                                },
-                                "Action": "s3:PutObject",
-                                "Resource": `${bucketArn}/*`
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Principal": {
-                                    "Service": "delivery.logs.amazonaws.com"
-                                },
-                                "Action": "s3:GetBucketAcl",
-                                "Resource": bucketArn
-                            }
-                        ]
-                    });
-
-                    return policy;
-                }),
-        });
-
         accessLogs = {
-            bucket: logsBucket.bucket,
-            enabled: true
+            bucket: config.albBucketLogs,
+            enabled: true,
+            prefix: config.albDomain
         }
     }
 
