@@ -143,10 +143,13 @@ const main = async (vpc, securityGroups, alb, amiId) => {
     });
 
     const instanceRefresh = new local.Command(`${config.project}-instance-refresh`, {
-            update: `aws autoscaling  start-instance-refresh --auto-scaling-group-name ${asgName} --strategy Rolling`
-        }
-        , {
-            dependsOn: [asg]
+            create: `aws autoscaling  start-instance-refresh --auto-scaling-group-name ${asgName} --strategy Rolling`,
+            environment: {
+                amiId: amiId
+            }
+        }, {
+            dependsOn: [asg],
+            replaceOnChanges: ["environment"]
         }
     );
 
