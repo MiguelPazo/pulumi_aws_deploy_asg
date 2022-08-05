@@ -1,0 +1,3 @@
+name: pulumi_aws_deploy_asg
+runtime: nodejs
+description: pulumi_aws_deploy_asg
