@@ -30,6 +30,7 @@ export const albDomain = configPulumi.get("albDomain");
 export const albDomainCertArn = configPulumi.get("albDomainCertArn");
 export const albDomainZoneId = configPulumi.get("albDomainZoneId");
 export const albBucketLogs = configPulumi.get("albBucketLogs");
+export const albTargetGroupName = configPulumi.get("albTargetGroupName");
 
 export const asgDesiredCapacity = configPulumi.getNumber("asgDesiredCapacity");
 export const asgMaxSize = configPulumi.getNumber("asgMaxSize");

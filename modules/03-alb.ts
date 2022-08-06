@@ -35,7 +35,7 @@ const main = async (vpc, securityGroupAlb) => {
     });
 
     const targetGroupAlb = alb.createTargetGroup(`${config.project}-alb-tg`, {
-        name: `${config.generalPrefix}-alb-tg`,
+        name: config.albTargetGroupName || `${config.generalPrefix}-alb-tg`,
         protocol: "HTTP",
         targetType: "instance",
         healthCheck: {
@@ -48,7 +48,7 @@ const main = async (vpc, securityGroupAlb) => {
         },
         tags: {
             ...config.generalTags,
-            Name: `${config.generalPrefix}-alb-tg`
+            Name: config.albTargetGroupName || `${config.generalPrefix}-alb-tg`,
         }
     });
 
