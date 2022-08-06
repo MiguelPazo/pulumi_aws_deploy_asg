@@ -142,8 +142,6 @@ const main = async (vpc, securityGroups, alb, amiId) => {
         },
     });
 
-    console.log(`aws autoscaling --region ${aws.config.region} start-instance-refresh --auto-scaling-group-name ${asgName} --strategy Rolling`)
-
     const instanceRefresh = new local.Command(`${config.project}-instance-refresh`, {
             create: `aws autoscaling --region ${aws.config.region} start-instance-refresh --auto-scaling-group-name ${asgName} --strategy Rolling`,
             environment: {
