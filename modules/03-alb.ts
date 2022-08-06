@@ -74,12 +74,14 @@ const main = async (vpc, securityGroupAlb) => {
 
     createAliasRecord(config.albDomain, config.albDomainZoneId, alb);
 
-    new aws.wafv2.WebAclAssociation(`${config.project}-acl-association`, {
-        resourceArn: alb.loadBalancer.arn,
-        webAclArn: config.wafArn
-    }, {
-        dependsOn: alb
-    })
+    if (config.wafArn) {
+        new aws.wafv2.WebAclAssociation(`${config.project}-acl-association`, {
+            resourceArn: alb.loadBalancer.arn,
+            webAclArn: config.wafArn
+        }, {
+            dependsOn: alb
+        })
+    }
 
     return Promise.all([alb, targetGroupAlb]);
 }
