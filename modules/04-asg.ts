@@ -142,12 +142,12 @@ const main = async (vpc, securityGroups, alb, amiId) => {
         },
     });
 
-    console.log(`aws autoscaling  start-instance-refresh --auto-scaling-group-name ${asgName} --strategy Rolling`);
+    console.log(`aws autoscaling --region ${aws.config.region} start-instance-refresh --auto-scaling-group-name ${asgName} --strategy Rolling`)
 
     const instanceRefresh = new local.Command(`${config.project}-instance-refresh`, {
-            create: `aws autoscaling  start-instance-refresh --auto-scaling-group-name ${asgName} --strategy Rolling`,
+            create: `aws autoscaling --region ${aws.config.region} start-instance-refresh --auto-scaling-group-name ${asgName} --strategy Rolling`,
             environment: {
-                amiId: amiId
+                version: pulumi.output(launchTemplate.latestVersion).apply(x => x.toString())
             }
         }, {
             dependsOn: [asg],
